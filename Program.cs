@@ -15,7 +15,14 @@ namespace FileSorter
             foreach (var file in files)
             {
                 var fileName = file.Substring(BasePath.Length + 1);
-                var extension = file.Split('.').Last();
+                var extension = Path.GetExtension(fileName);
+
+                if (string.IsNullOrEmpty(extension))
+                {
+                    Console.WriteLine($"{fileName} is probably a folder, skipping...");
+                    continue;
+                }
+
 
                 var fileType = DetermineFileType(extension);
 
@@ -53,12 +60,12 @@ namespace FileSorter
 
         private static string DetermineFileType(string extension)
         {
-            var zipExtensions = new string[] { "zip", "rar", "7z" };
-            var imageExtensions = new string[] { "png", "jpg", "gif", "jpeg", "eps", "bmp", "tif", "tiff" };
-            var installerExtensions = new string[] { "exe", "msi" };
-            var bookExtensions = new string[] { "epub", "mobi", "pdf" };
-            var textExtensions = new string[] { "txt", "doc", "docx", "rtf" };
-            var videoExtensions = new string[] { "avi", "mp4", "mpeg", "mpg" };
+            var zipExtensions = new string[] { ".zip", ".rar", ".7z" };
+            var imageExtensions = new string[] { ".png", ".jpg", ".gif", ".jpeg", ".eps", ".bmp", ".tif", ".tiff" };
+            var installerExtensions = new string[] { ".exe", ".msi" };
+            var bookExtensions = new string[] { ".epub", ".mobi", ".pdf" };
+            var textExtensions = new string[] { ".txt", ".doc", ".docx", ".rtf" };
+            var videoExtensions = new string[] { ".avi", ".mp4", ".mpeg", ".mpg" };
 
             if (imageExtensions.Contains(extension))
                 return "Images";
