@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace FileSorter
 {
-    class Program
+    internal class Program
     {
-
         public static string BasePath = $"C:\\Users\\{Environment.UserName}\\Downloads";
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
             var files = Directory.GetFileSystemEntries(BasePath);
 
@@ -26,7 +26,7 @@ namespace FileSorter
 
                 var fileType = DetermineFileType(extension);
 
-                var directory = GetCreatedOrUpdatedDirectoryPath(fileType);
+                var directory = CreateOrUpdateDirectory(fileType);
 
                 try
                 {
@@ -49,7 +49,8 @@ namespace FileSorter
 
             return (fileAttributes & FileAttributes.Directory) != 0;
         }
-        public static string GetCreatedOrUpdatedDirectoryPath(string extension)
+
+        public static string CreateOrUpdateDirectory(string extension)
         {
             if (!Directory.Exists($"{BasePath}\\{extension}"))
             {
@@ -92,6 +93,5 @@ namespace FileSorter
                 return "Torrents";
             return "Various";
         }
-
     }
 }
