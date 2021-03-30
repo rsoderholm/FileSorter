@@ -13,6 +13,9 @@ namespace FileSorter
             var files = Directory.GetFileSystemEntries(BasePath);
 
             int counter = 0;
+
+            var fileNumbers = files.Count(x => !IsFolder(x));
+            Console.WriteLine($"{fileNumbers} files found. Attempting to sort.");
             foreach (var file in files)
             {
                 var filePath = file.Substring(BasePath.Length + 1);
@@ -41,6 +44,7 @@ namespace FileSorter
             }
 
             Console.WriteLine($"Moved {counter} files in total.");
+            Console.ReadLine();
         }
 
         private static bool IsFolder(string path)
