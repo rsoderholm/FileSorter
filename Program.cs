@@ -12,6 +12,7 @@ namespace FileSorter
         {
             var files = Directory.GetFileSystemEntries(BasePath);
 
+            int counter = 0;
             foreach (var file in files)
             {
                 var filePath = file.Substring(BasePath.Length + 1);
@@ -31,12 +32,15 @@ namespace FileSorter
                 {
                     Console.WriteLine($"Moving {filePath} to {directory}");
                     File.Move(Path.Combine(BasePath, filePath), Path.Combine(directory, filePath));
+                    counter++;
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Couldn't move {filePath} to {directory}");
                 }
             }
+
+            Console.WriteLine($"Moved {counter} files in total.");
         }
 
         private static bool IsFolder(string path)
@@ -47,11 +51,11 @@ namespace FileSorter
         }
         public static string GetCreatedOrUpdatedDirectoryPath(string extension)
         {
-            if (!Directory.Exists($"{BasePath}/{extension}"))
+            if (!Directory.Exists($"{BasePath}\\{extension}"))
             {
                 try
                 {
-                    Directory.CreateDirectory($"{BasePath}/{extension}");
+                    Directory.CreateDirectory($"{BasePath}\\{extension}");
                     return $"{BasePath}\\{extension}";
                 }
                 catch (Exception ex)
@@ -60,7 +64,7 @@ namespace FileSorter
                 }
             }
 
-            return $"{BasePath}/{extension}";
+            return $"{BasePath}\\{extension}";
         }
 
         private static string DetermineFileType(string extension)
