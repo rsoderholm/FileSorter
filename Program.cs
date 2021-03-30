@@ -27,10 +27,9 @@ namespace FileSorter
 
                 var directory = GetCreatedOrUpdatedDirectoryPath(fileType);
 
-                if (string.IsNullOrEmpty(directory))
-                    continue;
                 try
                 {
+                    Console.WriteLine($"Moving {filePath} to {directory}");
                     File.Move(Path.Combine(BasePath, filePath), Path.Combine(directory, filePath));
                 }
                 catch (Exception ex)
