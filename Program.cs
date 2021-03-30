@@ -17,7 +17,7 @@ namespace FileSorter
                 var filePath = file.Substring(BasePath.Length + 1);
                 var extension = Path.GetExtension(filePath);
 
-                if (Isfolder(file))
+                if (IsFolder(file))
                 {
                     Console.WriteLine($"{filePath} is a folder, skipping...");
                     continue;
@@ -39,7 +39,7 @@ namespace FileSorter
             }
         }
 
-        private static bool Isfolder(string path)
+        private static bool IsFolder(string path)
         {
             var fileAttributes = File.GetAttributes(path);
 
