@@ -27,7 +27,7 @@ namespace FileSorter
                 {
                     File.Move(Path.Combine(BasePath, fileName), Path.Combine(directory, fileName));
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     Console.WriteLine($"Couldn't move {fileName} to {directory}");
                 }
@@ -44,7 +44,7 @@ namespace FileSorter
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error when creating directory");
+                    Console.WriteLine($"Error when creating directory");
                 }
             }
 
