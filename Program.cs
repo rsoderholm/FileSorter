@@ -14,15 +14,14 @@ namespace FileSorter
 
             foreach (var file in files)
             {
-                var fileName = file.Substring(BasePath.Length + 1);
-                var extension = Path.GetExtension(fileName);
+                var filePath = file.Substring(BasePath.Length + 1);
+                var extension = Path.GetExtension(filePath);
 
-                if (string.IsNullOrEmpty(extension))
+                if (Isfolder(file))
                 {
-                    Console.WriteLine($"{fileName} is probably a folder, skipping...");
+                    Console.WriteLine($"{filePath} is a folder, skipping...");
                     continue;
                 }
-
 
                 var fileType = DetermineFileType(extension);
 
@@ -32,13 +31,20 @@ namespace FileSorter
                     continue;
                 try
                 {
-                    File.Move(Path.Combine(BasePath, fileName), Path.Combine(directory, fileName));
+                    File.Move(Path.Combine(BasePath, filePath), Path.Combine(directory, filePath));
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Couldn't move {fileName} to {directory}");
+                    Console.WriteLine($"Couldn't move {filePath} to {directory}");
                 }
             }
+        }
+
+        private static bool Isfolder(string path)
+        {
+            var fileAttributes = File.GetAttributes(path);
+
+            return (fileAttributes & FileAttributes.Directory) != 0;
         }
         public static string GetCreatedOrUpdatedDirectoryPath(string extension)
         {
