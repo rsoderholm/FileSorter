@@ -10,12 +10,29 @@ namespace FileSorter
 
         private static void Main(string[] args)
         {
+            RunWatcher();
+        }
+
+        private static void RunWatcher()
+        {
+            using var watcher = new FileSystemWatcher(BasePath);
+            watcher.Filter = "";
+            watcher.IncludeSubdirectories = false;
+            watcher.EnableRaisingEvents = true;
+            watcher.Changed += OnChanged;
+            //watcher.Created += OnCreated;
+            Console.WriteLine("Watching for files. Press enter to exit:");
+            Console.ReadLine();
+        }
+
+        private static void Sort()
+        {
             var files = Directory.GetFileSystemEntries(BasePath);
 
             int counter = 0;
 
             var fileCounter = files.Count(x => !IsFolder(x));
-            Console.WriteLine($"{fileCounter} files found. Attempting to sort.");
+            Console.WriteLine($"{fileCounter} new files found. Attempting to sort.");
             foreach (var file in files)
             {
                 var filePath = file.Substring(BasePath.Length + 1);
@@ -23,7 +40,6 @@ namespace FileSorter
 
                 if (IsFolder(file))
                 {
-                    Console.WriteLine($"{filePath} is a folder, skipping...");
                     continue;
                 }
 
@@ -44,8 +60,30 @@ namespace FileSorter
             }
 
             Console.WriteLine($"Moved {counter} files in total.");
-            Console.ReadLine();
         }
+
+        private static void OnChanged(object sender, FileSystemEventArgs e)
+        {
+            if (e.FullPath.EndsWith(".tmp"))
+                return;
+
+            if (e.ChangeType != WatcherChangeTypes.Changed)
+                return;
+
+            Console.WriteLine($"Changes for {e.Name}");
+            Sort();
+        }
+
+        //private static void OnCreated(object sender, FileSystemEventArgs e)
+        //{
+        //    if (e.Name.Contains(".tmp"))
+        //        return;
+
+        //    if (e.ChangeType != WatcherChangeTypes.Created)
+        //        return;
+        //    Console.WriteLine("File created");
+        //    Sort();
+        //}
 
         private static bool IsFolder(string path)
         {
