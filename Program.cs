@@ -72,7 +72,7 @@ namespace FileSorter
                 return "Documents";
             if (videoExtensions.Contains(extension))
                 return "Videos";
-            if (extension == "torrent")
+            if (extension == ".torrent")
                 return "Torrents";
             return "Various";
         }
