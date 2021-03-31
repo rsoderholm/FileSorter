@@ -14,8 +14,8 @@ namespace FileSorter
 
             int counter = 0;
 
-            var fileNumbers = files.Count(x => !IsFolder(x));
-            Console.WriteLine($"{fileNumbers} files found. Attempting to sort.");
+            var fileCounter = files.Count(x => !IsFolder(x));
+            Console.WriteLine($"{fileCounter} files found. Attempting to sort.");
             foreach (var file in files)
             {
                 var filePath = file.Substring(BasePath.Length + 1);
