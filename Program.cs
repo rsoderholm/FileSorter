@@ -122,7 +122,7 @@ namespace FileSorter
             if (imageExtensions.Contains(extension))
                 return "Images";
             if (zipExtensions.Contains(extension))
-                return "Zip 1";
+                return "Zippables";
             if (installerExtensions.Contains(extension))
                 return "Installers";
             if (bookExtensions.Contains(extension))
