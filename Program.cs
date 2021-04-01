@@ -1,6 +1,8 @@
-﻿using System;
+﻿using FileSorter.Extensions;
+using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace FileSorter
 {
@@ -10,6 +12,7 @@ namespace FileSorter
 
         private static void Main(string[] args)
         {
+            Sort();
             RunWatcher();
         }
 
@@ -19,8 +22,8 @@ namespace FileSorter
             watcher.Filter = "";
             watcher.IncludeSubdirectories = false;
             watcher.EnableRaisingEvents = true;
-            watcher.Changed += OnChanged;
-            //watcher.Created += OnCreated;
+            //watcher.Changed += OnChanged;
+            watcher.Created += OnCreated;
             Console.WriteLine("Watching for files. Press enter to exit:");
             Console.ReadLine();
         }
@@ -35,8 +38,8 @@ namespace FileSorter
             Console.WriteLine($"{fileCounter} new files found. Attempting to sort.");
             foreach (var file in files)
             {
-                var filePath = file.Substring(BasePath.Length + 1);
-                var extension = Path.GetExtension(filePath);
+                var fileName = file.Substring(BasePath.Length + 1);
+                var extension = Path.GetExtension(fileName);
 
                 if (IsFolder(file))
                 {
@@ -47,41 +50,72 @@ namespace FileSorter
 
                 var directory = CreateOrUpdateDirectory(fileType);
 
+                if (FileExistsInDirectory(directory, fileName))
+                {
+                    Console.WriteLine($"File exists already, deleting instead");
+                    DeleteFile(file);
+                    return;
+                }
+
                 try
                 {
-                    Console.WriteLine($"Moving {filePath} to {directory}");
-                    File.Move(Path.Combine(BasePath, filePath), Path.Combine(directory, filePath));
+                    Console.WriteLine($"Moving {fileName} to {directory}");
+                    File.Move(Path.Combine(BasePath, fileName), Path.Combine(directory, fileName));
                     counter++;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Couldn't move {filePath} to {directory}");
+                    Console.WriteLine($"Couldn't move {fileName} to {directory}");
                 }
             }
 
             Console.WriteLine($"Moved {counter} files in total.");
         }
 
-        private static void OnChanged(object sender, FileSystemEventArgs e)
+        private static void DeleteFile(string path)
         {
-            if (e.FullPath.EndsWith(".tmp"))
-                return;
-
-            if (e.ChangeType != WatcherChangeTypes.Changed)
-                return;
-
-            Console.WriteLine($"Changes for {e.Name}");
-            Sort();
+            try
+            {
+                File.Delete(path);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not delete {path}: {ex.ToString()}");
+            }
         }
 
-        //private static void OnCreated(object sender, FileSystemEventArgs e)
+        private static bool FileExistsInDirectory(string directoryPath, string file)
+        {
+            var fileNames = Directory.GetFiles(directoryPath).Select(x => Path.GetFileName(x));
+
+            return fileNames.Contains(file);
+        }
+
+        private static void OnCreated(object sender, FileSystemEventArgs e)
+        {
+            Thread.Sleep(500);
+            if (e.FullPath.EndsWith(".tmp")) return;
+
+            if (e.ChangeType != WatcherChangeTypes.Created) return;
+            try
+            {
+                Sort();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
+        //private static void OnChanged(object sender, FileSystemEventArgs e)
         //{
-        //    if (e.Name.Contains(".tmp"))
+        //    if (e.FullPath.EndsWith(".tmp"))
         //        return;
 
-        //    if (e.ChangeType != WatcherChangeTypes.Created)
+        //    if (e.ChangeType != WatcherChangeTypes.Changed)
         //        return;
-        //    Console.WriteLine("File created");
+
+        //    Console.WriteLine($"Changes for {e.Name}");
         //    Sort();
         //}
 
@@ -112,24 +146,17 @@ namespace FileSorter
 
         private static string DetermineFileType(string extension)
         {
-            var zipExtensions = new string[] { ".zip", ".rar", ".7z" };
-            var imageExtensions = new string[] { ".png", ".jpg", ".gif", ".jpeg", ".eps", ".bmp", ".tif", ".tiff" };
-            var installerExtensions = new string[] { ".exe", ".msi" };
-            var bookExtensions = new string[] { ".epub", ".mobi", ".pdf" };
-            var textExtensions = new string[] { ".txt", ".doc", ".docx", ".rtf" };
-            var videoExtensions = new string[] { ".avi", ".mp4", ".mpeg", ".mpg" };
-
-            if (imageExtensions.Contains(extension))
+            if (FileExtensions.ImageExtensions.Contains(extension))
                 return "Images";
-            if (zipExtensions.Contains(extension))
+            if (FileExtensions.ZipExtensions.Contains(extension))
                 return "Zippables";
-            if (installerExtensions.Contains(extension))
+            if (FileExtensions.InstallerExtensions.Contains(extension))
                 return "Installers";
-            if (bookExtensions.Contains(extension))
+            if (FileExtensions.BookExtensions.Contains(extension))
                 return "Books";
-            if (textExtensions.Contains(extension))
+            if (FileExtensions.DocumentExtensions.Contains(extension))
                 return "Documents";
-            if (videoExtensions.Contains(extension))
+            if (FileExtensions.VideoExtensions.Contains(extension))
                 return "Videos";
             if (extension == ".torrent")
                 return "Torrents";
