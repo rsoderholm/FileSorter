@@ -51,7 +51,7 @@ namespace FileSorter
 
                 if (FileExistsInDirectory(directory, fileName))
                 {
-                    Console.WriteLine($"File exists already, deleting instead");
+                    Console.WriteLine($"{fileName} exists already, deleting instead");
                     DeleteFile(file);
                     return;
                 }
