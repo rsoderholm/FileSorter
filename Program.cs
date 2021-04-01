@@ -22,7 +22,6 @@ namespace FileSorter
             watcher.Filter = "";
             watcher.IncludeSubdirectories = false;
             watcher.EnableRaisingEvents = true;
-            //watcher.Changed += OnChanged;
             watcher.Created += OnCreated;
             Console.WriteLine("Watching for files. Press enter to exit:");
             Console.ReadLine();
@@ -106,18 +105,6 @@ namespace FileSorter
                 Console.WriteLine(ex.ToString());
             }
         }
-
-        //private static void OnChanged(object sender, FileSystemEventArgs e)
-        //{
-        //    if (e.FullPath.EndsWith(".tmp"))
-        //        return;
-
-        //    if (e.ChangeType != WatcherChangeTypes.Changed)
-        //        return;
-
-        //    Console.WriteLine($"Changes for {e.Name}");
-        //    Sort();
-        //}
 
         private static bool IsFolder(string path)
         {
