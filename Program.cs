@@ -113,7 +113,7 @@ namespace FileSorter
             return (fileAttributes & FileAttributes.Directory) != 0;
         }
 
-        public static string CreateOrUpdateDirectory(string extension)
+        private static string CreateOrUpdateDirectory(string extension)
         {
             if (!Directory.Exists($"{BasePath}\\{extension}"))
             {
