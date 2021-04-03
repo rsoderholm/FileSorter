@@ -1,5 +1,4 @@
-﻿using FileSorter.Extensions;
-using FileSorter.Handlers;
+﻿using FileSorter.Handlers;
 using System;
 using System.IO;
 using System.Linq;
@@ -8,8 +7,8 @@ namespace FileSorter.Services
 {
     public class SortService
     {
-        private FileHandler _fileHandler;
-        private string _basePath;
+        private readonly FileHandler _fileHandler;
+        private readonly string _basePath;
 
         public SortService(FileHandler fileHandler, string basePath)
         {
@@ -83,17 +82,17 @@ namespace FileSorter.Services
 
         private string DetermineFileType(string extension)
         {
-            if (FileExtensions.ImageExtensions.Contains(extension))
+            if (FileExtensions.FileExtensions.ImageExtensions.Contains(extension))
                 return "Images";
-            if (FileExtensions.ZipExtensions.Contains(extension))
+            if (FileExtensions.FileExtensions.ZipExtensions.Contains(extension))
                 return "Zippables";
-            if (FileExtensions.InstallerExtensions.Contains(extension))
+            if (FileExtensions.FileExtensions.InstallerExtensions.Contains(extension))
                 return "Installers";
-            if (FileExtensions.BookExtensions.Contains(extension))
+            if (FileExtensions.FileExtensions.BookExtensions.Contains(extension))
                 return "Books";
-            if (FileExtensions.DocumentExtensions.Contains(extension))
+            if (FileExtensions.FileExtensions.DocumentExtensions.Contains(extension))
                 return "Documents";
-            if (FileExtensions.VideoExtensions.Contains(extension))
+            if (FileExtensions.FileExtensions.VideoExtensions.Contains(extension))
                 return "Videos";
             if (extension == ".torrent")
                 return "Torrents";
