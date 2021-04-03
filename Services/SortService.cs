@@ -23,19 +23,17 @@ namespace FileSorter.Services
 
         public void Sort()
         {
-            var files = Directory.GetFileSystemEntries(_basePath);
+            var paths = Directory.GetFileSystemEntries(_basePath);
 
             int counter = 0;
 
-            var fileCounter = files.Count(x => !IsFolder(x));
+            var files = paths.Where(x => (!IsFolder(x))).ToList();
 
-            var filteredFiles = files.Where(x => (!IsFolder(x))).ToList();
-
-            if (!filteredFiles.Any())
+            if (!files.Any())
                 return;
 
-            Console.WriteLine($"{fileCounter} new files found. Attempting to sort.");
-            foreach (var file in filteredFiles)
+            Console.WriteLine($"{files.Count} new files found. Attempting to sort.");
+            foreach (var file in files)
             {
                 var fileName = file.Substring(_basePath.Length + 1);
                 var extension = Path.GetExtension(fileName);
@@ -78,25 +76,6 @@ namespace FileSorter.Services
             var fileAttributes = File.GetAttributes(path);
 
             return (fileAttributes & FileAttributes.Directory) != 0;
-        }
-
-        private string DetermineFileType(string extension)
-        {
-            if (FileExtensions.FileExtensions.ImageExtensions.Contains(extension))
-                return "Images";
-            if (FileExtensions.FileExtensions.ZipExtensions.Contains(extension))
-                return "Zippables";
-            if (FileExtensions.FileExtensions.InstallerExtensions.Contains(extension))
-                return "Installers";
-            if (FileExtensions.FileExtensions.BookExtensions.Contains(extension))
-                return "Books";
-            if (FileExtensions.FileExtensions.DocumentExtensions.Contains(extension))
-                return "Documents";
-            if (FileExtensions.FileExtensions.VideoExtensions.Contains(extension))
-                return "Videos";
-            if (extension == ".torrent")
-                return "Torrents";
-            return "Various";
         }
     }
 }
