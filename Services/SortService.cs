@@ -23,7 +23,7 @@ namespace FileSorter.Services
 
         public void Sort()
         {
-            var paths = Directory.GetFileSystemEntries(_basePath);
+            var paths = Directory.GetFiles(_basePath);
 
             int counter = 0;
 

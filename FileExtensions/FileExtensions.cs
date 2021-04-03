@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace FileSorter.FileExtensions
 {
@@ -10,7 +11,27 @@ namespace FileSorter.FileExtensions
         public static string[] BookExtensions = new string[] { ".epub", ".mobi", ".pdf" };
         public static string[] DocumentExtensions = new string[] { ".txt", ".doc", ".docx", ".rtf" };
         public static string[] VideoExtensions = new string[] { ".avi", ".mp4", ".mpeg", ".mpg" };
+        public static string[] TorrentExtensions = new string[] { ".torrent" };
 
-        public static Dictionary<string, string[]> Extensions = new Dictionary<string, string[]>();
+        public static Dictionary<FileType, string[]> Extensions = new Dictionary<FileType, string[]>()
+        {
+            {FileType.Archives, ZipExtensions},
+            {FileType.Images, ImageExtensions },
+            {FileType.Installers, InstallerExtensions},
+            {FileType.Books, BookExtensions },
+            {FileType.Documents, DocumentExtensions},
+            {FileType.Videos, VideoExtensions },
+            {FileType.Torrents, TorrentExtensions}
+        };
+
+        public static FileType GetFileType(string extension)
+        {
+            var type = Extensions.Where(x
+                => x.Value.Contains(extension))
+                .Select(x
+                    => x.Key).FirstOrDefault();
+
+            return type;
+        }
     }
 }

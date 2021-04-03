@@ -15,21 +15,9 @@ namespace FileSorter.Handlers
 
         public string DetermineFolderByExtension(string fileExtension)
         {
-            if (FileExtensions.FileExtensions.ImageExtensions.Contains(fileExtension))
-                return "Images";
-            if (FileExtensions.FileExtensions.ZipExtensions.Contains(fileExtension))
-                return "Zippables";
-            if (FileExtensions.FileExtensions.InstallerExtensions.Contains(fileExtension))
-                return "Installers";
-            if (FileExtensions.FileExtensions.BookExtensions.Contains(fileExtension))
-                return "Books";
-            if (FileExtensions.FileExtensions.DocumentExtensions.Contains(fileExtension))
-                return "Documents";
-            if (FileExtensions.FileExtensions.VideoExtensions.Contains(fileExtension))
-                return "Videos";
-            if (fileExtension == ".torrent")
-                return "Torrents";
-            return "Various";
+            var type = FileExtensions.FileExtensions.GetFileType(fileExtension);
+
+            return type.ToString() ?? "Various";
         }
 
         public string CreateOrUpdateDirectory(string fileExtension)
