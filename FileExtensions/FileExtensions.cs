@@ -9,8 +9,9 @@ namespace FileSorter.FileExtensions
         public static string[] ImageExtensions = new string[] { ".png", ".jpg", ".gif", ".jpeg", ".eps", ".bmp", ".tif", ".tiff" };
         public static string[] InstallerExtensions = new string[] { ".exe", ".msi" };
         public static string[] BookExtensions = new string[] { ".epub", ".mobi", ".pdf" };
-        public static string[] DocumentExtensions = new string[] { ".txt", ".doc", ".docx", ".rtf" };
+        public static string[] DocumentExtensions = new string[] { ".txt", ".doc", ".docx", ".rtf", ".xlsx" };
         public static string[] VideoExtensions = new string[] { ".avi", ".mp4", ".mpeg", ".mpg" };
+        public static string[] AudioExtensions = new string[] { ".mp3", ".wav", ".au", ".flac", ".aac", ".m4a" };
         public static string[] TorrentExtensions = new string[] { ".torrent" };
 
         public static Dictionary<FileType, string[]> Extensions = new Dictionary<FileType, string[]>()
@@ -21,6 +22,7 @@ namespace FileSorter.FileExtensions
             {FileType.Books, BookExtensions },
             {FileType.Documents, DocumentExtensions},
             {FileType.Videos, VideoExtensions },
+            {FileType.Audio, AudioExtensions },
             {FileType.Torrents, TorrentExtensions}
         };
 

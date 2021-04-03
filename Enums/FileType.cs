@@ -9,6 +9,7 @@
         Books,
         Documents,
         Videos,
-        Torrents
+        Torrents,
+        Audio
     }
 }

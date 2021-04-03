@@ -22,13 +22,13 @@ namespace FileSorter.Handlers
 
         public string CreateOrUpdateDirectory(string fileExtension)
         {
-            string newDirectory = $"{_basePath}\\{fileExtension}";
+            string saveDirectory = $"{_basePath}\\{fileExtension}";
 
-            if (!Directory.Exists(newDirectory))
+            if (!Directory.Exists(saveDirectory))
             {
                 try
                 {
-                    Directory.CreateDirectory(newDirectory);
+                    Directory.CreateDirectory(saveDirectory);
                 }
                 catch (Exception ex)
                 {
@@ -36,7 +36,7 @@ namespace FileSorter.Handlers
                 }
             }
 
-            return newDirectory;
+            return saveDirectory;
         }
 
         public bool FileExistsInDirectory(string directoryPath, string file)

@@ -27,7 +27,7 @@ namespace FileSorter.Services
             {
                 var files = Directory.GetFiles(_basePath).ToList();
 
-                int counter = 0;
+                int fileCounter = 0;
 
                 if (!files.Any())
                     return;
@@ -53,7 +53,7 @@ namespace FileSorter.Services
                     {
                         Console.WriteLine($"Moving {fileName} to {saveDirectory}");
                         _fileHandler.Move(Path.Combine(_basePath, fileName), Path.Combine(saveDirectory, fileName));
-                        counter++;
+                        fileCounter++;
                     }
                     catch (Exception ex)
                     {
@@ -61,7 +61,7 @@ namespace FileSorter.Services
                     }
                 }
 
-                Console.WriteLine($"Moved {counter} files in total.");
+                Console.WriteLine($"Moved {fileCounter} files in total.");
             }
             catch (DirectoryNotFoundException dirNotFound)
             {
