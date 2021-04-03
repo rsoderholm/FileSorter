@@ -51,6 +51,13 @@ namespace FileSorter.Handlers
             return newDirectory;
         }
 
+        public bool FileExistsInDirectory(string directoryPath, string file)
+        {
+            var fileNames = Directory.GetFiles(directoryPath).Select(x => Path.GetFileName(x));
+
+            return fileNames.Contains(file);
+        }
+
         public void Move(string from, string to)
         {
             File.Move(from, to);

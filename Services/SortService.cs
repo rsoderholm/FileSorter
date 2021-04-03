@@ -36,39 +36,32 @@ namespace FileSorter.Services
             foreach (var file in files)
             {
                 var fileName = file.Substring(_basePath.Length + 1);
-                var extension = Path.GetExtension(fileName);
+                var fileExtension = Path.GetExtension(fileName);
 
-                var fileType = _fileHandler.DetermineFolderByExtension(extension);
+                var fileType = _fileHandler.DetermineFolderByExtension(fileExtension);
 
-                var directory = _fileHandler.CreateOrUpdateDirectory(fileType);
+                var saveDirectory = _fileHandler.CreateOrUpdateDirectory(fileType);
 
-                if (FileExistsInDirectory(directory, fileName))
+                if (_fileHandler.FileExistsInDirectory(saveDirectory, fileName))
                 {
-                    Console.WriteLine($"{fileName} exists already, deleting instead");
+                    Console.WriteLine($"{fileName} already exists, deleting file instead");
                     _fileHandler.Delete(file);
                     return;
                 }
 
                 try
                 {
-                    Console.WriteLine($"Moving {fileName} to {directory}");
-                    _fileHandler.Move(Path.Combine(_basePath, fileName), Path.Combine(directory, fileName));
+                    Console.WriteLine($"Moving {fileName} to {saveDirectory}");
+                    _fileHandler.Move(Path.Combine(_basePath, fileName), Path.Combine(saveDirectory, fileName));
                     counter++;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Couldn't move {fileName} to {directory}");
+                    Console.WriteLine($"Couldn't move {fileName} to {saveDirectory}");
                 }
             }
 
             Console.WriteLine($"Moved {counter} files in total.");
-        }
-
-        private bool FileExistsInDirectory(string directoryPath, string file)
-        {
-            var fileNames = Directory.GetFiles(directoryPath).Select(x => Path.GetFileName(x));
-
-            return fileNames.Contains(file);
         }
 
         private bool IsFolder(string path)
