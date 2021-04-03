@@ -23,43 +23,50 @@ namespace FileSorter.Services
 
         public void Sort()
         {
-            var files = Directory.GetFiles(_basePath).ToList();
-
-            int counter = 0;
-
-            if (!files.Any())
-                return;
-
-            Console.WriteLine($"{files.Count} new files found. Attempting to sort.");
-            foreach (var file in files)
+            try
             {
-                var fileName = file.Substring(_basePath.Length + 1);
-                var fileExtension = Path.GetExtension(fileName);
+                var files = Directory.GetFiles(_basePath).ToList();
 
-                var fileType = _fileHandler.DetermineFolderByExtension(fileExtension);
+                int counter = 0;
 
-                var saveDirectory = _fileHandler.CreateOrUpdateDirectory(fileType);
+                if (!files.Any())
+                    return;
 
-                if (_fileHandler.FileExistsInDirectory(saveDirectory, fileName))
+                Console.WriteLine($"{files.Count} new files found. Attempting to sort.");
+                foreach (var file in files)
                 {
-                    Console.WriteLine($"{fileName} already exists, deleting file instead");
-                    _fileHandler.Delete(file);
-                    continue;
+                    var fileName = file.Substring(_basePath.Length + 1);
+                    var fileExtension = Path.GetExtension(fileName);
+
+                    var fileType = _fileHandler.DetermineFolderByExtension(fileExtension);
+
+                    var saveDirectory = _fileHandler.CreateOrUpdateDirectory(fileType);
+
+                    if (_fileHandler.FileExistsInDirectory(saveDirectory, fileName))
+                    {
+                        Console.WriteLine($"{fileName} already exists, deleting file instead");
+                        _fileHandler.Delete(file);
+                        continue;
+                    }
+
+                    try
+                    {
+                        Console.WriteLine($"Moving {fileName} to {saveDirectory}");
+                        _fileHandler.Move(Path.Combine(_basePath, fileName), Path.Combine(saveDirectory, fileName));
+                        counter++;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Couldn't move {fileName} to {saveDirectory}");
+                    }
                 }
 
-                try
-                {
-                    Console.WriteLine($"Moving {fileName} to {saveDirectory}");
-                    _fileHandler.Move(Path.Combine(_basePath, fileName), Path.Combine(saveDirectory, fileName));
-                    counter++;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Couldn't move {fileName} to {saveDirectory}");
-                }
+                Console.WriteLine($"Moved {counter} files in total.");
             }
-
-            Console.WriteLine($"Moved {counter} files in total.");
+            catch (DirectoryNotFoundException dirNotFound)
+            {
+                Console.WriteLine(dirNotFound.Message);
+            }
         }
     }
 }
