@@ -57,7 +57,7 @@ namespace FileSorter.Services
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Couldn't move {fileName} to {saveDirectory}");
+                        Console.WriteLine(ex.Message);
                     }
                 }
 
