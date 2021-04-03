@@ -44,7 +44,7 @@ namespace FileSorter.Services
                 {
                     Console.WriteLine($"{fileName} already exists, deleting file instead");
                     _fileHandler.Delete(file);
-                    return;
+                    continue;
                 }
 
                 try
