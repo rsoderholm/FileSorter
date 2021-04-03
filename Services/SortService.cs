@@ -23,11 +23,9 @@ namespace FileSorter.Services
 
         public void Sort()
         {
-            var paths = Directory.GetFiles(_basePath);
+            var files = Directory.GetFiles(_basePath).ToList();
 
             int counter = 0;
-
-            var files = paths.Where(x => (!IsFolder(x))).ToList();
 
             if (!files.Any())
                 return;
@@ -62,13 +60,6 @@ namespace FileSorter.Services
             }
 
             Console.WriteLine($"Moved {counter} files in total.");
-        }
-
-        private bool IsFolder(string path)
-        {
-            var fileAttributes = File.GetAttributes(path);
-
-            return (fileAttributes & FileAttributes.Directory) != 0;
         }
     }
 }
