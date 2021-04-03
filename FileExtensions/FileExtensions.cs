@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FileSorter.Extensions
+namespace FileSorter.FileExtensions
 {
     public static class FileExtensions
     {
@@ -12,15 +12,5 @@ namespace FileSorter.Extensions
         public static string[] VideoExtensions = new string[] { ".avi", ".mp4", ".mpeg", ".mpg" };
 
         public static Dictionary<string, string[]> Extensions = new Dictionary<string, string[]>();
-
-        //public FileExtensions()
-        //{
-        //    Extensions.Add("ZipExtensions", ZipExtensions);
-        //    Extensions.Add("ImageExtensions", ImageExtensions);
-        //    Extensions.Add("InstallerExtensions", InstallerExtensions);
-        //    Extensions.Add("BookExtensions", BookExtensions);
-        //    Extensions.Add("DocumentExtensions", DocumentExtensions);
-        //    Extensions.Add("VideoExtensions", VideoExtensions);
-        //}
     }
 }
