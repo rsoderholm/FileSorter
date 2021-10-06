@@ -1,38 +1,19 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using FileSorter.Handlers;
+using System;
+using FileSorter.Services;
 
 namespace FileSorter
 {
-    class Program
+    internal class Program
     {
-
-        public static string BasePath = $"C:\\Users\\{Environment.UserName}\\Downloads";
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            var files = Directory.GetFileSystemEntries(BasePath);
-
-            foreach (var file in files)
-            {
-                var fileName = file.Substring(BasePath.Length + 1);
-                var extension = file.Split('.').Last();
-
-                var fileType = DetermineFileType(extension);
-
-                var directory = GetCreatedOrUpdatedDirectoryPath(fileType);
-
-                if (string.IsNullOrEmpty(directory))
-                    continue;
-                try
-                {
-                    File.Move(Path.Combine(BasePath, fileName), Path.Combine(directory, fileName));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Couldn't move {fileName} to {directory}");
-                }
-            }
+            var basePath = $"C:\\Users\\{Environment.UserName}\\Downloads";
+            FileHandler fileHandler = new FileHandler(basePath);
+            SortService sortService = new SortService(fileHandler, basePath);
+            sortService.Sort();
         }
+
         public static string GetCreatedOrUpdatedDirectoryPath(string extension)
         {
             if (!Directory.Exists($"{BasePath}/{extension}"))
@@ -76,6 +57,5 @@ namespace FileSorter
                 return "Torrents";
             return "Various";
         }
-
     }
 }
