@@ -32,7 +32,7 @@ namespace FileSorter.Handlers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error when creating directory");
+                    Console.WriteLine($"Error when creating directory - {ex.Message}");
                 }
             }
 
@@ -41,7 +41,7 @@ namespace FileSorter.Handlers
 
         public bool FileExistsInDirectory(string directoryPath, string file)
         {
-            var fileNames = Directory.GetFiles(directoryPath).Select(x => Path.GetFileName(x));
+            var fileNames = Directory.GetFiles(directoryPath).Select(Path.GetFileName);
 
             return fileNames.Contains(file);
         }

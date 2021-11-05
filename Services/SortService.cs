@@ -1,24 +1,28 @@
 ﻿using FileSorter.Handlers;
+using Serilog;
 using System;
 using System.IO;
 using System.Linq;
 
 namespace FileSorter.Services
 {
-    public class SortService
+    public class SortService : ISortService
     {
-        private readonly FileHandler _fileHandler;
+        private readonly IFileHandler _fileHandler;
         private readonly string _basePath;
+        private readonly ILogger _logger;
 
-        public SortService(FileHandler fileHandler, string basePath)
+        public SortService(IFileHandler fileHandler, string basePath, ILogger logger)
         {
             _fileHandler = fileHandler;
             _basePath = basePath;
+            _logger = logger;
         }
 
         public string DefaultBasePath()
         {
-            return $"C:\\Users\\{Environment.UserName}\\Downloads";
+            return Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            //return $"C:\\Users\\{Environment.UserName}\\Downloads";
         }
 
         public void Sort()
@@ -52,6 +56,7 @@ namespace FileSorter.Services
                     try
                     {
                         Console.WriteLine($"Moving {fileName} to {saveDirectory}");
+
                         _fileHandler.Move(Path.Combine(_basePath, fileName), Path.Combine(saveDirectory, fileName));
                         fileCounter++;
                     }

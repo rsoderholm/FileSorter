@@ -9,5 +9,7 @@
         void Move(string from, string to);
 
         void Delete(string path);
+
+        public bool FileExistsInDirectory(string directoryPath, string file);
     }
 }
